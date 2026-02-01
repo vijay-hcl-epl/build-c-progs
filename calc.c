@@ -1,10 +1,12 @@
 #include <stdio.h>
+
 int main() {
 // Declare and initialize variables
 double firstNumber = 0.0;
 double secondNumber = 0.0;
 double calculationResult = 0.0;
 char operatorInput = '\0';
+  
 // Prompt the user for the first number
 printf("Enter the first number: ");
 scanf("%lf", &firstNumber);
@@ -14,6 +16,7 @@ scanf(" %c", &operatorInput); // Note the space before %c to catch whitespace
 // Prompt the user for the second number
 printf("Enter the second number: ");
 scanf("%lf", &secondNumber);
+  
 // Perform calculation based on the operator input
 switch (operatorInput) {
 case '+':
