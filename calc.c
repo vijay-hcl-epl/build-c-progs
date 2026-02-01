@@ -8,13 +8,13 @@ double calculationResult = 0.0;
 char operatorInput = '\0';
   
 // Prompt the user for the first number
-printf("Enter the first number: ");
+printf("Enter First Number: ");
 scanf("%lf", &firstNumber);
 // Prompt the user for the operator
-printf("Enter an operator (+, -, *, /): ");
+printf("Enter Operator (+, -, *, /): ");
 scanf(" %c", &operatorInput); // Note the space before %c to catch whitespace
 // Prompt the user for the second number
-printf("Enter the second number: ");
+printf("Enter Second Number: ");
 scanf("%lf", &secondNumber);
   
 // Perform calculation based on the operator input
