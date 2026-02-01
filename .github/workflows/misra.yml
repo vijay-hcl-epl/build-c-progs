@@ -1,0 +1,29 @@
+name: MISRA check (cppcheck)
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  misra:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install cppcheck + python
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cppcheck python3
+
+      - name: Run cppcheck MISRA addon
+        run: |
+          # Basic MISRA run (rule texts optional; see note below)
+          cppcheck --enable=warning,style \
+                   --inline-suppr \
+                   --error-exitcode=1 \
+                   --addon=misra.py \
+                   --std=c99 \
+                   .
+
