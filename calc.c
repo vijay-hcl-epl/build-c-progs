@@ -1,49 +1,119 @@
 #include <stdio.h>
 
-int main() {
-// Declare and initialize variables
-double firstNumber = 0.0;
-double secondNumber = 0.0;
-double calculationResult = 0.0;
-char operatorInput = '\0';
-  
-// Prompt the user for the first number
-printf("Enter First Number: ");
-scanf("%lf", &firstNumber);
-// Prompt the user for the operator
-printf("Enter Operator (+, -, *, /): ");
-scanf(" %c", &operatorInput); // Note the space before %c to catch whitespace
-// Prompt the user for the second number
-printf("Enter Second Number: ");
-scanf("%lf", &secondNumber);
-  
-// Perform calculation based on the operator input
-switch (operatorInput) {
-case '+':
-calculationResult = firstNumber + secondNumber;
-printf("Result: %.2lf\n", calculationResult);
-break;
-case '-':
-calculationResult = firstNumber - secondNumber;
-printf("Result: %.2lf\n", calculationResult);
-break;
-case '*':
-calculationResult = firstNumber * secondNumber;
-printf("Result: %.2lf\n", calculationResult);
-break;
-case '/':
-// Check division by zero
-if (secondNumber == 0.0) {
-printf("Error: Division by zero is not allowed.\n");
-} else {
-calculationResult = firstNumber / secondNumber;
-printf("Result: %.2lf\n", calculationResult);
+/* Return codes */
+#define APP_OK      (0)
+#define APP_ERROR   (1)
+
+static int read_double(const char * prompt, double * value)
+{
+    int rc;
+
+    if ((prompt == NULL) || (value == NULL))
+    {
+        return APP_ERROR;
+    }
+
+    (void)printf("%s", prompt);
+    rc = scanf("%lf", value);
+    if (rc != 1)
+    {
+        /* Clear invalid input from stdin */
+        (void)printf("Error: Invalid number input.\n");
+        (void)fflush(stdout);
+
+        /* Consume remaining characters until newline or EOF */
+        for (;;)
+        {
+            int ch = getchar();
+            if ((ch == '\n') || (ch == EOF))
+            {
+                break;
+            }
+        }
+        return APP_ERROR;
+    }
+
+    return APP_OK;
 }
-break;
-default:
-// Handle invalid operator input
-printf("Invalid operator. Please use +, -, *, or / only.\n");
-break;
+
+static int read_operator(const char * prompt, char * op)
+{
+    int rc;
+
+    if ((prompt == NULL) || (op == NULL))
+    {
+        return APP_ERROR;
+    }
+
+    (void)printf("%s", prompt);
+    rc = scanf(" %c", op); /* leading space skips whitespace */
+    if (rc != 1)
+    {
+        (void)printf("Error: Invalid operator input.\n");
+        return APP_ERROR;
+    }
+
+    return APP_OK;
 }
-return 0; // Successful program termination
+
+int main(void)
+{
+    double first_number = 0.0;
+    double second_number = 0.0;
+    double result = 0.0;
+    char op = '\0';
+    int status = APP_OK;
+
+    if (read_double("Enter First Number: ", &first_number) != APP_OK)
+    {
+        status = APP_ERROR;
+    }
+    else if (read_operator("Enter Operator (+, -, *, /): ", &op) != APP_OK)
+    {
+        status = APP_ERROR;
+    }
+    else if (read_double("Enter Second Number: ", &second_number) != APP_OK)
+    {
+        status = APP_ERROR;
+    }
+    else
+    {
+        switch (op)
+        {
+            case '+':
+                result = first_number + second_number;
+                (void)printf("Result: %.2f\n", result);
+                break;
+
+            case '-':
+                result = first_number - second_number;
+                (void)printf("Result: %.2f\n", result);
+                break;
+
+            case '*':
+                result = first_number * second_number;
+                (void)printf("Result: %.2f\n", result);
+                break;
+
+            case '/':
+                if (second_number == 0.0)
+                {
+                    (void)printf("Error: Division by zero is not allowed.\n");
+                    status = APP_ERROR;
+                }
+                else
+                {
+                    result = first_number / second_number;
+                    (void)printf("Result: %.2f\n", result);
+                }
+                break;
+
+            default:
+                (void)printf("Invalid operator. Please use +, -, *, or / only.\n");
+                status = APP_ERROR;
+                break;
+        }
+    }
+
+    return status;
 }
