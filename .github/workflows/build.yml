@@ -1,0 +1,21 @@
+name: Build C Program
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Compile calc.c
+        run: gcc calc.c -o calc
+
+      - name: Run calc
+        run: ./calc
